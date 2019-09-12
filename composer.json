@@ -1,7 +1,7 @@
 {
     "name": "mongdch/mon-template",
     "description": "The PHP view template Library",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "PHP",
         "view",

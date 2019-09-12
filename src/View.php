@@ -1,4 +1,5 @@
 <?php
+
 namespace mon\template;
 
 use Exception;
@@ -103,7 +104,7 @@ class View implements ArrayAccess
     public function assign($key, $value = null)
     {
         if (is_array($key)) {
-            $this->data = array_merge($this->data, (array)$key);
+            $this->data = array_merge($this->data, (array) $key);
         } else {
             $this->data[$key] = $value;
         }
@@ -318,7 +319,7 @@ class View implements ArrayAccess
     public function set($key, $value = null)
     {
         if (is_array($key)) {
-            $this->data = array_merge($this->data, (array)$key);
+            $this->data = array_merge($this->data, (array) $key);
         } else {
             $this->data[$key] = $value;
         }

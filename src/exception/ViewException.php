@@ -1,4 +1,5 @@
 <?php
+
 namespace mon\template\exception;
 
 use Exception;

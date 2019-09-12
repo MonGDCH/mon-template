@@ -1,4 +1,5 @@
 <?php
+
 namespace mon\template;
 
 use ArrayAccess;
@@ -45,7 +46,7 @@ class Form
      */
     public static function __callStatic($name, $arguments)
     {
-        return call_user_func_array([FormBuilder::instance(), $name], (array)$arguments);
+        return call_user_func_array([FormBuilder::instance(), $name], (array) $arguments);
     }
 }
 
@@ -397,7 +398,7 @@ class FormBuilder
 
         $options['id'] = $this->getIdAttribute($name, $options);
 
-        $value = (string)$this->getValueAttribute($name, $value);
+        $value = (string) $this->getValueAttribute($name, $value);
 
         unset($options['size']);
 
@@ -583,7 +584,7 @@ class FormBuilder
      */
     protected function option($display, $value, $selected)
     {
-        $selected = $this->getSelectedValue($value, (array)$selected);
+        $selected = $this->getSelectedValue($value, (array) $selected);
 
         $options = array('value' => $this->escape($value), 'selected' => $selected);
 
@@ -603,7 +604,7 @@ class FormBuilder
             return in_array($value, $selected) ? 'selected' : null;
         }
 
-        return ((string)$value == (string)$selected) ? 'selected' : null;
+        return ((string) $value == (string) $selected) ? 'selected' : null;
     }
 
     /**
@@ -698,7 +699,7 @@ class FormBuilder
 
         $posted = $this->getValueAttribute($name);
 
-        return is_array($posted) ? in_array($value, (array)$posted) : (bool)$posted;
+        return is_array($posted) ? in_array($value, (array) $posted) : (bool) $posted;
     }
 
     /**
@@ -928,7 +929,7 @@ class FormBuilder
         // 假设我们的keys 和 value 是相同的,
         // 拿HTML“required”属性来说,假设是['required']数组,
         // 会已 required="required" 拼接起来,而不是用数字keys去拼接
-        foreach ((array)$attributes as $key => $value) {
+        foreach ((array) $attributes as $key => $value) {
             $element = $this->attributeElement($key, $value);
             if (!is_null($element))
                 $html[] = $element;
@@ -1032,7 +1033,7 @@ class Arr
     public static function forget(&$array, $keys)
     {
         $original = &$array;
-        $keys = (array)$keys;
+        $keys = (array) $keys;
         if (count($keys) === 0) {
             return;
         }
