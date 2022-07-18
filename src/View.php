@@ -9,8 +9,8 @@ use mon\template\exception\ViewException;
 /**
  * 视图引擎
  *
- * @author Mon  985558837@qq.com
- * @version v1.0
+ * @author Mon  <985558837@qq.com>
+ * @version 1.0.1   优化注解    2022-07-18
  *
  * @method fetch 		返回视图内容
  * @method display 		返回视图内容(不支持路径补全)
@@ -36,7 +36,7 @@ class View implements ArrayAccess
     /**
      * 视图目录路径
      *
-     * @var [type]
+     * @var string
      */
     protected $path;
 
@@ -99,7 +99,7 @@ class View implements ArrayAccess
      *
      * @param  string|array $key   string: 模版变量名;array: 批量赋值
      * @param  mixed        $value 模版变量值
-     * @return [type]        [description]
+     * @return View
      */
     public function assign($key, $value = null)
     {
@@ -113,11 +113,11 @@ class View implements ArrayAccess
     }
 
     /**
-     * 
+     * 获取视图内容
      *
-     * @param  [type] $value [description]
-     * @param  array  $data  [description]
-     * @return [type]        [description]
+     * @param string $view  视图名称
+     * @param array $data   视图数据
+     * @return string
      */
     public function fetch($view, $data = [])
     {
@@ -127,9 +127,9 @@ class View implements ArrayAccess
     /**
      * 返回视图内容(不补全视图路径)
      *
-     * @param  [type] $view [description]
-     * @param  array  $data [description]
-     * @return [type]       [description]
+     * @param string $view  完整的视图路径
+     * @param array $data   视图数据
+     * @return string
      */
     public function display($view, $data = [])
     {
@@ -138,8 +138,11 @@ class View implements ArrayAccess
 
     /**
      * 包含视图文件
-     * @param  [type] $view [description]
-     * @return [type]       [description]
+     *
+     * @param string $view  视图名称
+     * @param array $data   视图数据
+     * @param boolean $echo 是否直接输出
+     * @return void|string
      */
     public function load($view, $data = [], $echo = true)
     {
@@ -155,7 +158,8 @@ class View implements ArrayAccess
     /**
      * 视图继承
      *
-     * @return [type] [description]
+     * @param string $view  视图名称
+     * @return void
      */
     public function extend($view)
     {
@@ -166,8 +170,9 @@ class View implements ArrayAccess
      * 开始定义一个视图片段, 用户继承时的父级视图$this->with()输出
      * 一般 block() 与 blockEnd() 成对出现, 但传递第二个参数，则不需要 sectionEnd()
      *
-     * @param string $name
-     * @param string $content
+     * @param string $name  视图名称
+     * @param string $content   视图内容
+     * @return void
      */
     public function block($name, $content = '')
     {
@@ -196,8 +201,9 @@ class View implements ArrayAccess
     /**
      * 定义视图片段输出位置, 用于继承是父级视图输出子视图上报的视图片段
      *
-     * @param string $name
-     * @param string $content
+     * @param string $name  视图名称
+     * @param string $content   视图内容
+     * @return void
      */
     public function putBlock($name, $content = '')
     {
@@ -219,7 +225,7 @@ class View implements ArrayAccess
      *
      * @param  string  $node 获取内容的节点
      * @param  boolean $echo 是否直接输出
-     * @return string        如果不是直接输出则返回内容
+     * @return string|void  如果不是直接输出则返回内容
      */
     public function content($node = 'content', $echo = true)
     {
@@ -235,7 +241,8 @@ class View implements ArrayAccess
     /**
      * 设置视图目录路径
      *
-     * @param [type] $path 视图目录根路径
+     * @param string $path 视图目录根路径
+     * @return View
      */
     public function setPath($path)
     {
@@ -246,7 +253,7 @@ class View implements ArrayAccess
     /**
      * 获取视图目录路径
      *
-     * @return [type] 获取视图目录根路径
+     * @return string 获取视图目录根路径
      */
     public function getPath()
     {
@@ -256,8 +263,8 @@ class View implements ArrayAccess
     /**
      * 设置视图文件后缀
      *
-     * @param [type] $ext
-     * @return void
+     * @param string $ext
+     * @return View
      */
     public function setExt($ext)
     {
@@ -268,7 +275,7 @@ class View implements ArrayAccess
     /**
      * 获取视图文件后缀
      *
-     * @return void
+     * @return string
      */
     public function getExt()
     {
@@ -278,8 +285,8 @@ class View implements ArrayAccess
     /**
      * 视图数据是否存在
      *
-     * @param  [type]  $key 视图变量名称
-     * @return boolean      [description]
+     * @param  string  $key 视图变量名称
+     * @return boolean
      */
     public function has($key)
     {
@@ -289,9 +296,9 @@ class View implements ArrayAccess
     /**
      * 获取视图数据(支持'.'获取多级数据)
      *
-     * @param  [type] $key     变量名，支持.分割数组
-     * @param  [type] $default 默认值
-     * @return [type]          [description]
+     * @param  string $key     变量名，支持.分割数组
+     * @param  mixed  $default 默认值
+     * @return mixed
      */
     public function get($key, $default = null)
     {
@@ -313,8 +320,9 @@ class View implements ArrayAccess
     /**
      * 设置视图数据
      *
-     * @param [type] $key   变量名
-     * @param [type] $value 变量值
+     * @param string $key   变量名
+     * @param mixed  $value 变量值
+     * @return View
      */
     public function set($key, $value = null)
     {
@@ -330,8 +338,8 @@ class View implements ArrayAccess
     /**
      * 删除视图数据
      *
-     * @param  [type] $key 变量名
-     * @return [type]      [description]
+     * @param  string $key 变量名
+     * @return void
      */
     public function del($key)
     {
@@ -341,7 +349,7 @@ class View implements ArrayAccess
     /**
      * 清空视图数据
      *
-     * @return [type] [description]
+     * @return void
      */
     public function clear()
     {
@@ -351,9 +359,9 @@ class View implements ArrayAccess
     /**
      * 核心方法，渲染视图
      *
-     * @param  string $view 视图路径
+     * @param  string $view 视图名称
      * @param  array  $data 视图数据
-     * @return [type]       [description]
+     * @return string
      */
     protected function render($view, $data = [])
     {
@@ -394,6 +402,7 @@ class View implements ArrayAccess
      *
      * @param  string $name     视图片段名称
      * @param  string $content  视图片段内容
+     * @return void
      */
     protected function setSections($name, $content)
     {
@@ -418,8 +427,9 @@ class View implements ArrayAccess
     /**
      * 处理获取视图内容
      *
-     * @param  [type] $view 视图路径
-     * @return [type]       [description]
+     * @param string $view  视图名称
+     * @param array $data   视图数据
+     * @return string
      */
     protected function getContent($view, $data = [])
     {
@@ -449,8 +459,8 @@ class View implements ArrayAccess
     /**
      * 获取视图路径
      *
-     * @param  [type] $view 视图名称
-     * @return [type]       [description]
+     * @param  string $view 视图名称
+     * @return string
      */
     protected function getViewPath($view)
     {
@@ -464,7 +474,7 @@ class View implements ArrayAccess
     /**
      * 提升嵌套级别
      *
-     * @return [type] [description]
+     * @return void
      */
     protected function increase()
     {
@@ -474,7 +484,7 @@ class View implements ArrayAccess
     /**
      * 降低嵌套级别
      *
-     * @return [type] [description]
+     * @return void
      */
     protected function decrement()
     {
@@ -488,9 +498,11 @@ class View implements ArrayAccess
      */
     protected function flush()
     {
-        unset($this->sections[$this->offset],
-        $this->sectionStacks[$this->offset],
-        $this->sectionsNotFound[$this->offset]);
+        unset(
+            $this->sections[$this->offset],
+            $this->sectionStacks[$this->offset],
+            $this->sectionsNotFound[$this->offset]
+        );
     }
 
     // +----------------------------------------------------------------------------
@@ -500,8 +512,8 @@ class View implements ArrayAccess
     /**
      * 接口方法，视图数据是否存在
      *
-     * @param  [type]  $key 变量名称
-     * @return boolean      [description]
+     * @param  string  $key 变量名称
+     * @return boolean
      */
     public function offsetExists($key)
     {
@@ -511,8 +523,8 @@ class View implements ArrayAccess
     /**
      * 接口方法，获取视图数据，不存在则返回null
      *
-     * @param  [type] $key     变量名称
-     * @return [type]          [description]
+     * @param  string $key     变量名称
+     * @return mixed
      */
     public function offsetGet($key)
     {
@@ -522,8 +534,9 @@ class View implements ArrayAccess
     /**
      * 接口方法，设置视图数据
      *
-     * @param [type] $key   变量名称
-     * @param [type] $value 默认值
+     * @param string $key   变量名称
+     * @param mixed $value  变量值
+     * @return mixed
      */
     public function offsetSet($key, $value = null)
     {
@@ -533,8 +546,8 @@ class View implements ArrayAccess
     /**
      * 接口方法，删除视图数据
      *
-     * @param  [type] $key 变量名称
-     * @return [type]      [description]
+     * @param  string $key 变量名称
+     * @return void
      */
     public function offsetUnset($key)
     {
@@ -557,6 +570,7 @@ class View implements ArrayAccess
      *
      * @param string $key   变量名
      * @param mixed $value  变量值
+     * @return void
      */
     public function __set($key, $value)
     {
@@ -567,7 +581,7 @@ class View implements ArrayAccess
      * 视图数据是否存在
      *
      * @param  string  $key 变量名
-     * @return bool
+     * @return boolean
      */
     public function __isset($key)
     {
@@ -578,6 +592,7 @@ class View implements ArrayAccess
      * 删除视图数据
      *
      * @param string $key 变量名
+     * @return void
      */
     public function __unset($key)
     {

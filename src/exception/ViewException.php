@@ -6,6 +6,9 @@ use Exception;
 
 /**
  * 视图异常
+ * 
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0
  */
 class ViewException extends Exception
 { }

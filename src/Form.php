@@ -7,42 +7,44 @@ use ArrayAccess;
 /**
  * 表单构建组件类
  *
- * @class Form
- * @package fast
- * @method mixed token() static token
- * @method mixed close() static 关闭一个HTML表单
- * @method mixed setModel(mixed $model) static 设置HTML表单模型
- * @method mixed open(array $options) static 打开一个新的HTML表单
- * @method mixed file(string $name, array $options = array()) static 表单file
- * @method mixed reset(string $name, array $options = array()) static 表单reset
- * @method mixed password(string $name, array $options = array()) static 表单password
- * @method mixed button(string $value = null, array $options = array()) static 表单button
- * @method mixed model(mixed $model ,array $options = array()) static 打开一个新的HTML表单模型
- * @method mixed submit(string $value = null, array $options = array()) static 表单submit提交
- * @method mixed text(string $name, string $value = null, array $options = []) static 表单text
- * @method mixed label(string $name, string $value = null, array $options = []) static label标签
- * @method mixed url(string $name, string $value = null, array $options = array()) static 表单url
- * @method mixed email(string $name, string $value = null, array $options = array()) static 表单email
- * @method mixed hidden(string $name, string $value = null, array $options = array()) static 表单hidden
- * @method mixed image(string $url, string $name = null, array $attributes = array()) static 表单image提交
- * @method mixed textarea(string $name, string $value = null, array $options = array()) static 表单textarea
- * @method mixed checkbox(string $name, string $value = 1, string $checked = null, array $options = array()) static 表单checkbox
- * @method mixed radio(string $name, string $value = null, string $checked = null, array $options = array())) static 表单radio
- * @method mixed select(string $name, array $list = array(), string $selected = null, array $options = array()) static 表单textarea
- * @method mixed selectYear(string $name ,string $begin,string $end, string $selected = null ,array $options = array()) static select年
- * @method mixed selectMonth(string $name ,string $selected = null ,array $options = array() ,string $format = '%m') static select月
+ * @method static mixed token() token
+ * @method static mixed close() 关闭一个HTML表单
+ * @method static mixed setModel(mixed $model) 设置HTML表单模型
+ * @method static mixed open(array $options) 打开一个新的HTML表单
+ * @method static mixed file(string $name, array $options = array()) 表单file
+ * @method static mixed reset(string $name, array $options = array()) 表单reset
+ * @method static mixed password(string $name, array $options = array()) 表单password
+ * @method static mixed button(string $value = null, array $options = array()) 表单button
+ * @method static mixed model(mixed $model ,array $options = array()) 打开一个新的HTML表单模型
+ * @method static mixed submit(string $value = null, array $options = array()) 表单submit提交
+ * @method static mixed text(string $name, string $value = null, array $options = []) 表单text
+ * @method static mixed label(string $name, string $value = null, array $options = []) label标签
+ * @method static mixed url(string $name, string $value = null, array $options = array()) 表单url
+ * @method static mixed email(string $name, string $value = null, array $options = array()) 表单email
+ * @method static mixed hidden(string $name, string $value = null, array $options = array()) 表单hidden
+ * @method static mixed image(string $url, string $name = null, array $attributes = array()) 表单image提交
+ * @method static mixed textarea(string $name, string $value = null, array $options = array()) 表单textarea
+ * @method static mixed checkbox(string $name, string $value = 1, string $checked = null, array $options = array()) 表单checkbox
+ * @method static mixed radio(string $name, string $value = null, string $checked = null, array $options = array())) 表单radio
+ * @method static mixed select(string $name, array $list = array(), string $selected = null, array $options = array()) 表单textarea
+ * @method static mixed selectYear(string $name ,string $begin,string $end, string $selected = null ,array $options = array()) select年
+ * @method static mixed selectMonth(string $name ,string $selected = null ,array $options = array() ,string $format = '%m') select月
+ * 
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0
  */
 class Form
 {
     public function __construct()
-    { }
+    {
+    }
 
     /**
      * 静态调用
      *
-     * @param [type] $name
-     * @param [type] $arguments
-     * @return void
+     * @param string $name
+     * @param mixed $arguments
+     * @return mixed
      */
     public static function __callStatic($name, $arguments)
     {
@@ -107,7 +109,8 @@ class FormBuilder
      * @return void
      */
     public function __construct()
-    { }
+    {
+    }
 
     public static function instance($options = [])
     {

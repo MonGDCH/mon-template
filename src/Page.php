@@ -6,94 +6,93 @@ namespace mon\template;
  * 基于Bootstrap的分页类
  *
  * @author Mon <985558837@qq.com>
- * @version v1.1 2017-07-21
- * @update 独立化css组件配置
+ * @version 1.1.0   优化注解    2022-07-18
  */
 class Page
 {
     /**
      * 分页URL根路径
      *
-     * @var [type]
+     * @var string
      */
-    public $baseUrl;
+    protected $baseUrl;
 
     /**
      * 起始行数
      *
-     * @var [type]
-     */
-    public $firstRow;
-
-    /**
-     * 列表每页显示行数
-     *
-     * @var [type]
-     */
-    public $listRows;
-
-    /**
-     * 分页跳转时要带的参数
-     *
-     * @var [type]
-     */
-    public $parameter;
-
-    /**
-     * 总行数
-     *
-     * @var [type]
-     */
-    public $totalRows;
-
-    /**
-     * 分页总页面数
-     *
-     * @var [type]
-     */
-    public $totalPages;
-
-    /**
-     * 分页栏每页显示的页数
-     *
      * @var integer
      */
-    public $rollPage = 6;
-
-    /**
-     * 最后一页是否显示总页数
-     *
-     * @var boolean
-     */
-    public $lastSuffix = true;
-
-    /**
-     * 分页参数名
-     *
-     * @var string
-     */
-    private $p = 'page';
-
-    /**
-     * 当前链接URL
-     *
-     * @var string
-     */
-    private $url = '';
+    protected $firstRow;
 
     /**
      * 当前页
      *
      * @var integer
      */
-    private $nowPage = 1;
+    protected $nowPage = 1;
+
+    /**
+     * 列表每页显示行数
+     *
+     * @var integer
+     */
+    protected $listRows;
+
+    /**
+     * 总行数
+     *
+     * @var integer
+     */
+    protected $totalRows;
+
+    /**
+     * 分页总页面数
+     *
+     * @var integer
+     */
+    protected $totalPages;
+
+    /**
+     * 分页栏每页显示的页数
+     *
+     * @var integer
+     */
+    protected $rollPage = 6;
+
+    /**
+     * 最后一页是否显示总页数
+     *
+     * @var boolean
+     */
+    protected $lastSuffix = true;
+
+    /**
+     * 分页参数名
+     *
+     * @var string
+     */
+    protected $p = 'page';
+
+    /**
+     * 当前链接URL
+     *
+     * @var string
+     */
+    protected $url = '';
+
+    /**
+     * 分页跳转时要带的参数
+     *
+     * @var array
+     */
+    protected $parameter;
 
     /**
      * 样式库
      *
      * @var string
      */
-    private $css = "
+    protected $css = "
         <style>
         .lmf_pagination {display: inline-block;padding-left: 0;margin: 20px 0;border-radius: 4px;}
         .lmf_pagination > li {display: inline;}
@@ -117,7 +116,7 @@ class Page
      *
      * @var array
      */
-    private $config  = [
+    protected $config  = [
         'header' => '<span class="rows">共 %TOTAL_ROW% 条记录</span>',
         'prev'   => '&laquo;',
         'next'   => '&raquo;',
@@ -127,18 +126,176 @@ class Page
     ];
 
     /**
-     * 当前选择样式大小
+     * 当前选择样式大小类型
      *
-     * @var [type]
+     * @var integer
      */
-    private $size_type;
+    protected $size_type;
 
-    // 样式大小
-    private $size = [
+    /**
+     * 样式大小
+     *
+     * @var array
+     */
+    protected $size = [
         'def'   => '',
         'sm'    => 'lmf_pagination-sm',
         'lg'    => 'lmf_pagination-lg'
     ];
+
+    /**
+     * 设置baseUrl
+     *
+     * @param string $baseUrl
+     * @return Page
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+        return $this;
+    }
+
+    /**
+     * 获取baseUrl
+     *
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * 设置firstRow
+     *
+     * @param string $firstRow
+     * @return Page
+     */
+    public function setFirstRow($firstRow)
+    {
+        $this->firstRow = $firstRow;
+        return $this;
+    }
+
+    /**
+     * 获取firstRow
+     *
+     * @return integer
+     */
+    public function getFirstRow()
+    {
+        return $this->firstRow;
+    }
+
+    /**
+     * 设置listRows
+     *
+     * @param string $listRows
+     * @return Page
+     */
+    public function setListRows($listRows)
+    {
+        $this->listRows = $listRows;
+        return $this;
+    }
+
+    /**
+     * 获取listRows
+     *
+     * @return integer
+     */
+    public function getListRows()
+    {
+        return $this->listRows;
+    }
+
+    /**
+     * 设置totalRows
+     *
+     * @param string $totalRows
+     * @return Page
+     */
+    public function setTotalRows($totalRows)
+    {
+        $this->totalRows = $totalRows;
+        return $this;
+    }
+
+    /**
+     * 获取totalRows
+     *
+     * @return integer
+     */
+    public function getTotalRows()
+    {
+        return $this->totalRows;
+    }
+
+    /**
+     * 设置totalPages
+     *
+     * @param string $totalPages
+     * @return Page
+     */
+    public function setTotalPages($totalPages)
+    {
+        $this->totalPages = $totalPages;
+        return $this;
+    }
+
+    /**
+     * 获取totalPages
+     *
+     * @return integer
+     */
+    public function getTotalPages()
+    {
+        return $this->totalPages;
+    }
+
+    /**
+     * 设置rollPage
+     *
+     * @param string $rollPage
+     * @return Page
+     */
+    public function setRollPage($rollPage)
+    {
+        $this->rollPage = $rollPage;
+        return $this;
+    }
+
+    /**
+     * 获取rollPage
+     *
+     * @return integer
+     */
+    public function getRollPage()
+    {
+        return $this->rollPage;
+    }
+
+    /**
+     * 设置parameter
+     *
+     * @param string $parameter
+     * @return Page
+     */
+    public function setParameter($parameter)
+    {
+        $this->parameter = $parameter;
+        return $this;
+    }
+
+    /**
+     * 获取parameter
+     *
+     * @return array
+     */
+    public function getParameter()
+    {
+        return $this->parameter;
+    }
 
     /**
      * 注册分页配置
@@ -148,7 +305,7 @@ class Page
      * @param array  $listRows   每页显示记录数
      * @param string $p          分页参数名
      * @param array  $parameter  分页跳转的参数
-     * @return [type] [description]
+     * @return Page
      */
     public function register($baseUrl, $totalRows, $listRows = 20, $p = 'page', $sizeType = "sm", $parameter = [])
     {
@@ -171,6 +328,7 @@ class Page
      *
      * @param string $name  设置名称
      * @param string $value 设置值
+     * @return Page
      */
     public function setConfig($name, $value)
     {
@@ -264,7 +422,7 @@ class Page
      * @param  integer $page 页码
      * @return string
      */
-    private function url($page)
+    protected function url($page)
     {
         return str_replace('_PAGE_NUM_', $page, $this->url);
     }
