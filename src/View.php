@@ -1,28 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\template;
 
-use Exception;
+use Throwable;
 use ArrayAccess;
 use mon\template\exception\ViewException;
 
 /**
  * 视图引擎
- *
- * @author Mon  <985558837@qq.com>
- * @version 1.0.1   优化注解    2022-07-18
- *
- * @method fetch 		返回视图内容
- * @method display 		返回视图内容(不支持路径补全)
- * @method assign		设置视图数据
- * @method load 	    包含视图文件(include)
- * @method extend 		视图继承
- * @method block 		视图片段
- * @method blockEnd		视图片段结束
- * @method putBlock 	视图片段输出
- * @method content 		子视图内容输出
- * @method has 			是否存在某个视图数据
- * @method get 			获取视图数据
+ * 
+ * @author Mon <985558837@qq.com>
+ * @version 2.0.0
  */
 class View implements ArrayAccess
 {
@@ -88,10 +78,54 @@ class View implements ArrayAccess
      * @param string $path 视图目录路径
      * @param string $ext  视图文件后缀
      */
-    function __construct($path = "", $ext = '')
+    function __construct(string $path = "", string $ext = '')
     {
         $this->path = $path;
         $this->ext = $ext;
+    }
+
+    /**
+     * 设置视图目录路径
+     *
+     * @param string $path 视图目录根路径
+     * @return View
+     */
+    public function setPath(string $path): View
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * 获取视图目录路径
+     *
+     * @return string 获取视图目录根路径
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * 设置视图文件后缀
+     *
+     * @param string $ext
+     * @return View
+     */
+    public function setExt(string $ext): View
+    {
+        $this->ext = $ext;
+        return $this;
+    }
+
+    /**
+     * 获取视图文件后缀
+     *
+     * @return string
+     */
+    public function getExt(): string
+    {
+        return $this->ext;
     }
 
     /**
@@ -101,7 +135,7 @@ class View implements ArrayAccess
      * @param  mixed        $value 模版变量值
      * @return View
      */
-    public function assign($key, $value = null)
+    public function assign($key, $value = null): View
     {
         if (is_array($key)) {
             $this->data = array_merge($this->data, (array) $key);
@@ -119,7 +153,7 @@ class View implements ArrayAccess
      * @param array $data   视图数据
      * @return string
      */
-    public function fetch($view, $data = [])
+    public function fetch(string $view, array $data = []): string
     {
         return $this->render($this->getViewPath($view), $data);
     }
@@ -131,7 +165,7 @@ class View implements ArrayAccess
      * @param array $data   视图数据
      * @return string
      */
-    public function display($view, $data = [])
+    public function display(string $view, array $data = []): string
     {
         return $this->render($view  . '.' . $this->ext, $data);
     }
@@ -142,17 +176,17 @@ class View implements ArrayAccess
      * @param string $view  视图名称
      * @param array $data   视图数据
      * @param boolean $echo 是否直接输出
-     * @return void|string
+     * @return string
      */
-    public function load($view, $data = [], $echo = true)
+    public function load(string $view, array $data = [], bool $echo = true): string
     {
         $view = $this->getContent($this->getViewPath($view), $data);
 
         if ($echo) {
             echo $view;
-        } else {
-            return $view;
         }
+
+        return $view;
     }
 
     /**
@@ -161,7 +195,7 @@ class View implements ArrayAccess
      * @param string $view  视图名称
      * @return void
      */
-    public function extend($view)
+    public function extend(string $view): void
     {
         $this->extends[$this->offset] = $this->getViewPath($view);
     }
@@ -174,7 +208,7 @@ class View implements ArrayAccess
      * @param string $content   视图内容
      * @return void
      */
-    public function block($name, $content = '')
+    public function block(string $name, string $content = ''): void
     {
         ob_start();
         $this->sectionStacks[$this->offset][] = $name;
@@ -191,7 +225,7 @@ class View implements ArrayAccess
      *
      * @return string 视图片段标识符
      */
-    public function blockEnd()
+    public function blockEnd(): string
     {
         $lastname = array_pop($this->sectionStacks[$this->offset]);
         $this->setSections($lastname, ob_get_clean());
@@ -205,7 +239,7 @@ class View implements ArrayAccess
      * @param string $content   视图内容
      * @return void
      */
-    public function putBlock($name, $content = '')
+    public function putBlock(string $name, string $content = ''): void
     {
         if (isset($this->sections[$this->offset][$name])) {
             echo $this->sections[$this->offset][$name];
@@ -225,61 +259,17 @@ class View implements ArrayAccess
      *
      * @param  string  $node 获取内容的节点
      * @param  boolean $echo 是否直接输出
-     * @return string|void  如果不是直接输出则返回内容
+     * @return string  如果不是直接输出则返回内容
      */
-    public function content($node = 'content', $echo = true)
+    public function content(string $node = 'content', bool $echo = true): string
     {
         $content = $this->getSections($node);
 
         if ($echo) {
             echo $content;
-        } else {
-            return $content;
         }
-    }
 
-    /**
-     * 设置视图目录路径
-     *
-     * @param string $path 视图目录根路径
-     * @return View
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-        return $this;
-    }
-
-    /**
-     * 获取视图目录路径
-     *
-     * @return string 获取视图目录根路径
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * 设置视图文件后缀
-     *
-     * @param string $ext
-     * @return View
-     */
-    public function setExt($ext)
-    {
-        $this->ext = $ext;
-        return $this;
-    }
-
-    /**
-     * 获取视图文件后缀
-     *
-     * @return string
-     */
-    public function getExt()
-    {
-        return $this->ext;
+        return $content;
     }
 
     /**
@@ -288,7 +278,7 @@ class View implements ArrayAccess
      * @param  string  $key 视图变量名称
      * @return boolean
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return array_key_exists($key, $this->data);
     }
@@ -300,7 +290,7 @@ class View implements ArrayAccess
      * @param  mixed  $default 默认值
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $name = explode(".", $key);
 
@@ -320,14 +310,14 @@ class View implements ArrayAccess
     /**
      * 设置视图数据
      *
-     * @param string $key   变量名
+     * @param string|array $key   变量名
      * @param mixed  $value 变量值
      * @return View
      */
-    public function set($key, $value = null)
+    public function set($key, $value = null): View
     {
         if (is_array($key)) {
-            $this->data = array_merge($this->data, (array) $key);
+            $this->data = array_merge($this->data, $key);
         } else {
             $this->data[$key] = $value;
         }
@@ -341,7 +331,7 @@ class View implements ArrayAccess
      * @param  string $key 变量名
      * @return void
      */
-    public function del($key)
+    public function del(string $key)
     {
         unset($this->data[$key]);
     }
@@ -351,7 +341,7 @@ class View implements ArrayAccess
      *
      * @return void
      */
-    public function clear()
+    public function clear(): void
     {
         $this->data = [];
     }
@@ -363,7 +353,7 @@ class View implements ArrayAccess
      * @param  array  $data 视图数据
      * @return string
      */
-    protected function render($view, $data = [])
+    protected function render(string $view, array $data = []): string
     {
         // 设置当前视图数据
         $this->set($data);
@@ -404,7 +394,7 @@ class View implements ArrayAccess
      * @param  string $content  视图片段内容
      * @return void
      */
-    protected function setSections($name, $content)
+    protected function setSections(string $name, string $content): void
     {
         $this->sections[$this->offset][$name] = $content;
     }
@@ -415,13 +405,12 @@ class View implements ArrayAccess
      * @param  string $name     视图片段名称
      * @return string
      */
-    protected function getSections($name)
+    protected function getSections(string $name): string
     {
         if (isset($this->sections[$this->offset][$name])) {
             return $this->sections[$this->offset][$name];
-        } else {
-            return '';
         }
+        return '';
     }
 
     /**
@@ -429,9 +418,11 @@ class View implements ArrayAccess
      *
      * @param string $view  视图名称
      * @param array $data   视图数据
+     * @throws Throwable
+     * @throws ViewException
      * @return string
      */
-    protected function getContent($view, $data = [])
+    protected function getContent(string $view, array $data = []): string
     {
         if (file_exists($view)) {
             // 开启缓存，利用缓存获取视图内容
@@ -444,16 +435,16 @@ class View implements ArrayAccess
             // 校验是否出现异常，出现异常清空缓存，防止污染程序
             try {
                 include $view;
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 // 获取缓存，清空缓存
                 ob_get_clean();
                 throw $e;
             }
             // 返回视图内容，并清空缓存
             return ob_get_clean();
-        } else {
-            throw new ViewException("Cannot find the requested view: " . $view);
         }
+
+        throw new ViewException("Cannot find the requested view: " . $view);
     }
 
     /**
@@ -462,7 +453,7 @@ class View implements ArrayAccess
      * @param  string $view 视图名称
      * @return string
      */
-    protected function getViewPath($view)
+    protected function getViewPath(string $view): string
     {
         if ($this->path) {
             $view = $this->path . ltrim($view, DIRECTORY_SEPARATOR);
@@ -476,7 +467,7 @@ class View implements ArrayAccess
      *
      * @return void
      */
-    protected function increase()
+    protected function increase(): void
     {
         $this->offset++;
     }
@@ -486,7 +477,7 @@ class View implements ArrayAccess
      *
      * @return void
      */
-    protected function decrement()
+    protected function decrement(): void
     {
         $this->offset--;
     }
@@ -496,7 +487,7 @@ class View implements ArrayAccess
      *
      * @return void
      */
-    protected function flush()
+    protected function flush(): void
     {
         unset(
             $this->sections[$this->offset],
@@ -515,7 +506,7 @@ class View implements ArrayAccess
      * @param  string  $key 变量名称
      * @return boolean
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->has($key);
     }
@@ -538,9 +529,9 @@ class View implements ArrayAccess
      * @param mixed $value  变量值
      * @return mixed
      */
-    public function offsetSet($key, $value = null)
+    public function offsetSet($key, $value = null): void
     {
-        return $this->set($key, $value);
+        $this->set($key, $value);
     }
 
     /**
@@ -549,7 +540,7 @@ class View implements ArrayAccess
      * @param  string $key 变量名称
      * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         $this->del($key);
     }

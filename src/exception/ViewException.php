@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\template\exception;
 
 use Exception;
@@ -11,4 +13,5 @@ use Exception;
  * @version 1.0.0
  */
 class ViewException extends Exception
-{ }
+{
+}
