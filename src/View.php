@@ -167,7 +167,7 @@ class View implements ArrayAccess
      */
     public function display(string $view, array $data = []): string
     {
-        return $this->render($view  . '.' . $this->ext, $data);
+        return $this->render($view . $this->ext, $data);
     }
 
     /**
@@ -459,7 +459,7 @@ class View implements ArrayAccess
             $view = $this->path . ltrim($view, DIRECTORY_SEPARATOR);
         }
 
-        return $view . '.' . $this->ext;
+        return $view . $this->ext;
     }
 
     /**
