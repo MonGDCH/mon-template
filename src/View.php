@@ -28,7 +28,7 @@ class View implements ArrayAccess
      *
      * @var string
      */
-    protected $path;
+    protected $path = '';
 
     /**
      * 视图文件后缀
@@ -71,18 +71,6 @@ class View implements ArrayAccess
      * @var array
      */
     protected $sectionsNotFound = [];
-
-    /**
-     * 构造方法
-     *
-     * @param string $path 视图目录路径
-     * @param string $ext  视图文件后缀
-     */
-    function __construct(string $path = "", string $ext = '')
-    {
-        $this->path = $path;
-        $this->ext = $ext;
-    }
 
     /**
      * 设置视图目录路径

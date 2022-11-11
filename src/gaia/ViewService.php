@@ -19,6 +19,20 @@ class ViewService extends View
     use Instance;
 
     /**
+     * 视图目录路径
+     *
+     * @var string
+     */
+    protected $path = '';
+
+    /**
+     * 视图文件后缀
+     *
+     * @var string
+     */
+    protected $ext = '';
+
+    /**
      * 生成URL
      *
      * @param string $url   url
