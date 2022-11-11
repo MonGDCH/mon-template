@@ -304,24 +304,31 @@ class Page
      *
      * @param string $baseUrl       分页URL根路径
      * @param integer $totalRows    总记录数
-     * @param integer $nowPage      当前分页数
-     * @param integer $listRows     每页显示记录数
      * @param array $parameter      分页跳转参数
-     * @param string $p             分页参数名
-     * @param string $sizeType      分页UI尺寸
+     * @param integer $listRows     每页显示记录数
+     * @param string $p             分页GET参数名
+     * @param string $sizeType      分页UI尺寸, 支持def、sm、lg
      * @return Page
      */
-    public function register(string $baseUrl, int $totalRows, int $nowPage = 1, int $listRows = 20, array $parameter = [], string $p = 'page', string $sizeType = "sm"): Page
+    public function register(string $baseUrl, int $totalRows, array $parameter = [], int $listRows = 20, string $p = 'page', string $sizeType = "def"): Page
     {
-        // 基础设置
-        $this->baseUrl    = $baseUrl;
-        $this->size_type  = in_array($sizeType, ['def', 'sm', 'lg']) ? $sizeType : 'def';
-        $this->totalRows  = $totalRows; // 设置总记录数
-        $this->listRows   = $listRows;  // 设置每页显示行数
-        $this->parameter  = $parameter; // 跳转参数
-        $this->p          = $p;         // 分页参数名
-        $this->nowPage    = $nowPage > 0 ? $nowPage : 1;
-        $this->firstRow   = $this->listRows * ($this->nowPage - 1);
+        // 分页根URL
+        $this->baseUrl = $baseUrl;
+        // 分页大小
+        $this->size_type = in_array($sizeType, ['def', 'sm', 'lg']) ? $sizeType : 'def';
+        // 总记录数
+        $this->totalRows = $totalRows;
+        // 每页显示行数
+        $this->listRows = $listRows;
+        // 跳转参数
+        $this->parameter = $parameter;
+        // 分页参数名
+        $this->p = $p;
+        // 当前分页数
+        $nowPage = $this->parameter[$this->p] ?? 1;
+        $this->nowPage = $nowPage > 0 ? intval($nowPage) : 1;
+        // 起始页数
+        $this->firstRow = $this->listRows * ($this->nowPage - 1);
 
         return $this;
     }
