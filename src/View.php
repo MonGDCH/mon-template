@@ -12,7 +12,7 @@ use mon\template\exception\ViewException;
  * 视图引擎
  * 
  * @author Mon <985558837@qq.com>
- * @version 2.0.0
+ * @version 2.1.0   2023-06-20  增加布局定义
  */
 class View implements ArrayAccess
 {
@@ -35,7 +35,7 @@ class View implements ArrayAccess
      *
      * @var string
      */
-    protected $ext = '';
+    protected $ext = 'html';
 
     /**
      * 视图嵌套级别
@@ -71,6 +71,13 @@ class View implements ArrayAccess
      * @var array
      */
     protected $sectionsNotFound = [];
+
+    /**
+     * 布局
+     *
+     * @var array
+     */
+    protected $layouts = [];
 
     /**
      * 设置视图目录路径
@@ -109,11 +116,35 @@ class View implements ArrayAccess
     /**
      * 获取视图文件后缀
      *
+     * @param boolean $dot  是否加上 . 符号
      * @return string
      */
-    public function getExt(): string
+    public function getExt(bool $dot = true): string
     {
-        return $this->ext;
+        return ($dot ? '.' : '') . $this->ext;
+    }
+
+    /**
+     * 设置布局
+     *
+     * @param string $name      布局名称
+     * @param string $layout    布局视图路径
+     * @return View
+     */
+    public function setLayout(string $name, string $layout): View
+    {
+        $this->layouts[$name] = $layout;
+        return $this;
+    }
+
+    /**
+     * 获取布局设置
+     *
+     * @return array
+     */
+    public function getLayout(): array
+    {
+        return $this->layouts;
     }
 
     /**
@@ -151,11 +182,13 @@ class View implements ArrayAccess
      *
      * @param string $view  完整的视图路径
      * @param array $data   视图数据
+     * @param boolean $ext  是否加上后缀名
      * @return string
      */
-    public function display(string $view, array $data = []): string
+    public function display(string $view, array $data = [], bool $ext = true): string
     {
-        return $this->render($view . $this->ext, $data);
+        $tmp = $ext ? ($view . $this->getExt()) : $view;
+        return $this->render($tmp, $data);
     }
 
     /**
@@ -186,6 +219,21 @@ class View implements ArrayAccess
     public function extend(string $view): void
     {
         $this->extends[$this->offset] = $this->getViewPath($view);
+    }
+
+    /**
+     * 设置布局
+     *
+     * @param string $layout
+     * @return void
+     */
+    public function layout(string $layout): void
+    {
+        if (!isset($this->layouts[$layout])) {
+            throw new ViewException('Layout not found: ' . $layout);
+        }
+
+        $this->extends[$this->offset] = $this->layouts[$layout] . $this->getExt();
     }
 
     /**
@@ -281,7 +329,6 @@ class View implements ArrayAccess
     public function get(string $key, $default = null)
     {
         $name = explode(".", $key);
-
         $result = $this->data;
         for ($i = 0, $len = count($name); $i < $len; $i++) {
             // 不存在配置节点，返回默认值
@@ -317,21 +364,23 @@ class View implements ArrayAccess
      * 删除视图数据
      *
      * @param  string $key 变量名
-     * @return void
+     * @return View
      */
-    public function del(string $key)
+    public function delete(string $key): View
     {
         unset($this->data[$key]);
+        return $this;
     }
 
     /**
      * 清空视图数据
      *
-     * @return void
+     * @return View
      */
-    public function clear(): void
+    public function clear(): View
     {
         $this->data = [];
+        return $this;
     }
 
     /**
@@ -432,7 +481,7 @@ class View implements ArrayAccess
             return ob_get_clean();
         }
 
-        throw new ViewException("Cannot find the requested view: " . $view);
+        throw new ViewException("Can not find the requested view: " . $view);
     }
 
     /**
@@ -447,7 +496,7 @@ class View implements ArrayAccess
             $view = $this->path . ltrim($view, DIRECTORY_SEPARATOR);
         }
 
-        return $view . $this->ext;
+        return $view . $this->getExt();
     }
 
     /**
@@ -530,7 +579,7 @@ class View implements ArrayAccess
      */
     public function offsetUnset($key): void
     {
-        $this->del($key);
+        $this->delete($key);
     }
 
     /**
@@ -575,6 +624,6 @@ class View implements ArrayAccess
      */
     public function __unset($key)
     {
-        $this->del($key);
+        $this->delete($key);
     }
 }
